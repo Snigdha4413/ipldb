@@ -1,72 +1,30 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>IPL Auction App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<title>IPL Auction</title>
+<link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
-<h1>IPL Player Auction</h1>
+<h1>IPL Auction Platform</h1>
 
-<!-- Country Filter -->
-<form method="GET">
-    <select name="country">
-        <option value="">All Countries</option>
-        <option value="India">India</option>
-        <option value="Australia">Australia</option>
-        <option value="England">England</option>
-        <option value="South Africa">South Africa</option>
-    </select>
-
-    <button type="submit">Filter Players</button>
-</form>
-
-{% if message %}
-<p class="message">{{ message }}</p>
-{% endif %}
-
-<!-- Player Cards -->
-<div class="player-container">
+<div class="players">
 
 {% for p in players %}
 
-<div class="player-card">
+<div class="card">
 
-<h3>{{p[1]}}</h3>
+<h2>{{p.name}}</h2>
 
-<div class="player-stats">
-Country: {{p[2]}}
-</div>
+<p>Country: {{p.country}}</p>
+<p>Team: {{p.team}}</p>
+<p>Current Bid: ₹{{p.current_bid}}</p>
 
-<div class="player-stats">
-Runs: {{p[4]}}
-</div>
-
-<div class="player-stats">
-Strike Rate: {{p[5]}}
-</div>
-
-<div class="player-stats price">
-Current Bid: ₹{{p[7]}}
-</div>
-
-<!-- Bid Form -->
-<form action="/bid" method="POST">
-
-<input type="hidden" name="player_id" value="{{p[0]}}">
-
-<input 
-type="number" 
-name="bid" 
-placeholder="Enter bid"
-min="{{p[7] + 1}}"
-required
->
-
-<button type="submit">Place Bid</button>
-
-</form>
+<a href="/player/{{p.id}}">
+<button>View & Bid</button>
+</a>
 
 </div>
 
@@ -75,4 +33,5 @@ required
 </div>
 
 </body>
+
 </html>
