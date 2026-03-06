@@ -1,12 +1,17 @@
 from flask import Flask, render_template, request
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 app = Flask(__name__)
 
-if DATABASE_URL.startswith("postgres://"):
+# Step 1: Get database URL from Render
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Step 2: Fix postgres URL for SQLAlchemy
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
+# Step 3: Create database engine
 engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
 
 @app.route("/")
@@ -58,6 +63,7 @@ def bid():
 if __name__ == "__main__":
 
     app.run(debug=True)
+
 
 
 
