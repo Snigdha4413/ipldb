@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Bid Player</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>{{player.name}}</h1>
+
+<p>Country: {{player.country}}</p>
+<p>Team: {{player.team}}</p>
+<p>Current Bid: ₹{{player.current_bid}}</p>
+
+<form action="/bid" method="POST">
+
+<input type="hidden" name="player_id" value="{{player.id}}">
+
+<input type="text" name="bidder" placeholder="Your Name" required>
+
+<input type="number" name="bid_amount" placeholder="Enter Bid" required>
+
+<button type="submit">Place Bid</button>
+
+</form>
+
+<a href="/">Back</a>
+
+</body>
+
+</html>
