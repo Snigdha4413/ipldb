@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from functools import wraps
 import os
 from sqlalchemy import create_engine, text
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "your-secret-key-here")  # Set this in Render env vars!
+app.secret_key = os.getenv("SECRET_KEY", "ipl-auction-secret-key-2024")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
@@ -20,7 +23,6 @@ def is_admin():
     return session.get("role") == "admin"
 
 def login_required(f):
-    from functools import wraps
     @wraps(f)
     def decorated(*args, **kwargs):
         if not session.get("user"):
@@ -39,11 +41,11 @@ def login():
 
         with engine.connect() as conn:
             user = conn.execute(
-                text("SELECT * FROM users WHERE username=:u AND password=:p"),
-                {"u": username, "p": password}
+                text("SELECT * FROM users WHERE username = :u"),
+                {"u": username}
             ).fetchone()
 
-        if user:
+        if user and check_password_hash(user.password, password):
             session["user"] = user.username
             session["role"] = user.role
             return redirect(url_for("index"))
@@ -68,16 +70,17 @@ def index():
             text("SELECT DISTINCT team FROM players ORDER BY team")
         ).fetchall()
 
-    return render_template("index.html", teams=teams, user=get_current_user(), is_admin=is_admin())
+    return render_template("index.html", teams=teams,
+                           user=get_current_user(), is_admin=is_admin())
 
 
-# --- TEAM PAGE: Show Players in a Team ---
+# --- TEAM PAGE ---
 @app.route("/team/<team_name>")
 @login_required
 def team(team_name):
     with engine.connect() as conn:
         players = conn.execute(
-            text("SELECT * FROM players WHERE team=:team"),
+            text("SELECT * FROM players WHERE team = :team"),
             {"team": team_name}
         ).fetchall()
 
@@ -85,14 +88,14 @@ def team(team_name):
     with engine.connect() as conn:
         for p in players:
             highest = conn.execute(
-                text("SELECT MAX(bid_amount) FROM bids WHERE player_id=:id"),
+                text("SELECT MAX(bid_amount) FROM bids WHERE player_id = :id"),
                 {"id": p.id}
             ).scalar() or 0
 
             top_bidder = conn.execute(
                 text("""
                     SELECT bidder FROM bids
-                    WHERE player_id=:id
+                    WHERE player_id = :id
                     ORDER BY bid_amount DESC LIMIT 1
                 """),
                 {"id": p.id}
@@ -118,17 +121,17 @@ def team(team_name):
 def player(id):
     with engine.connect() as conn:
         p = conn.execute(
-            text("SELECT * FROM players WHERE id=:id"), {"id": id}
+            text("SELECT * FROM players WHERE id = :id"), {"id": id}
         ).fetchone()
 
         highest = conn.execute(
-            text("SELECT MAX(bid_amount) FROM bids WHERE player_id=:id"), {"id": id}
+            text("SELECT MAX(bid_amount) FROM bids WHERE player_id = :id"), {"id": id}
         ).scalar() or 0
 
         top_bidder = conn.execute(
             text("""
                 SELECT bidder FROM bids
-                WHERE player_id=:id
+                WHERE player_id = :id
                 ORDER BY bid_amount DESC LIMIT 1
             """),
             {"id": id}
@@ -137,7 +140,7 @@ def player(id):
         bid_history = conn.execute(
             text("""
                 SELECT bidder, bid_amount, bid_time
-                FROM bids WHERE player_id=:id
+                FROM bids WHERE player_id = :id
                 ORDER BY bid_amount DESC
             """),
             {"id": id}
@@ -156,12 +159,12 @@ def bid():
         return "Admins cannot place bids!", 403
 
     player_id = request.form["player_id"]
-    bidder = session["user"]  # Use logged-in username automatically
+    bidder = session["user"]
     amount = int(request.form["bid_amount"])
 
     with engine.connect() as conn:
         current = conn.execute(
-            text("SELECT MAX(bid_amount) FROM bids WHERE player_id=:id"),
+            text("SELECT MAX(bid_amount) FROM bids WHERE player_id = :id"),
             {"id": player_id}
         ).scalar() or 0
 
