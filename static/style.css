@@ -1,29 +1,107 @@
-body{
-font-family: Arial;
-background:#f2f2f2;
-text-align:center;
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  text-align: center;
+  margin: 0;
 }
 
-.players{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
+/* TOP BAR */
+.topbar {
+  background: #1a237e;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.topbar h1 { margin: 0; font-size: 1.5rem; }
+.user-info { font-size: 0.9rem; }
+.user-info a { color: #ffcc02; text-decoration: none; }
+
+/* LOGIN */
+.login-box {
+  background: white;
+  width: 320px;
+  margin: 100px auto;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.login-box h1 { color: #1a237e; margin-bottom: 5px; }
+.login-box input {
+  width: 90%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.error { color: red; font-size: 0.9rem; }
+
+/* CARDS */
+.players {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  margin: 15px;
+  width: 200px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+.card h2 { font-size: 1rem; margin-bottom: 8px; color: #1a237e; }
+.bid-amount { font-size: 1.3rem; font-weight: bold; color: #e65100; }
+.bidder { font-size: 0.8rem; color: #666; }
+
+/* PLAYER DETAIL */
+.player-detail {
+  background: white;
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+.player-detail input[type=number] {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.admin-notice {
+  background: #fff3e0;
+  border: 1px solid #ff9800;
+  color: #e65100;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 15px 0;
 }
 
-.card{
-background:white;
-padding:20px;
-margin:15px;
-width:200px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.2);
+/* BID TABLE */
+.bid-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 0.9rem;
 }
+.bid-table th { background: #1a237e; color: white; padding: 8px; }
+.bid-table td { padding: 8px; border-bottom: 1px solid #eee; }
 
-button{
-background:#ff5722;
-color:white;
-border:none;
-padding:10px;
-border-radius:5px;
-cursor:pointer;
+/* BUTTONS */
+button {
+  background: #ff5722;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-top: 10px;
 }
+button:hover { background: #e64a19; }
