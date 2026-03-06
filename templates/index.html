@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 <title>IPL Auction</title>
 <link rel="stylesheet" href="/static/style.css">
@@ -8,7 +7,7 @@
 
 <body>
 
-<h1>IPL Auction Platform</h1>
+<h1>IPL Player Auction</h1>
 
 <div class="players">
 
@@ -18,12 +17,14 @@
 
 <h2>{{p.name}}</h2>
 
-<p>Country: {{p.country}}</p>
-<p>Team: {{p.team}}</p>
-<p>Current Bid: ₹{{p.current_bid}}</p>
+<p>{{p.country}}</p>
+
+<p>{{p.role}}</p>
+
+<p>Current Bid: ₹{{p.highest_bid}}</p>
 
 <a href="/player/{{p.id}}">
-<button>View & Bid</button>
+<button>Open Auction</button>
 </a>
 
 </div>
@@ -33,5 +34,4 @@
 </div>
 
 </body>
-
 </html>
