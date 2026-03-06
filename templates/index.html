@@ -5,26 +5,35 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+
   <div class="topbar">
-    <h1>🏏 IPL Auction</h1>
-    <div class="user-info">
-      Logged in as <strong>{{ user }}</strong>
-      ({{ "Admin" if is_admin else "Client" }})
-      &nbsp;|&nbsp;
-      <a href="/logout">Logout</a>
+    <div class="topbar-left">
+      <span class="topbar-logo">🏏</span>
+      <span class="topbar-title">IPL Auction</span>
+    </div>
+    <div class="topbar-right">
+      <span class="badge {% if is_admin %}badge-admin{% else %}badge-client{% endif %}">
+        {{ "👁️ Admin" if is_admin else "🙋 Client" }}
+      </span>
+      <span class="username">{{ user }}</span>
+      <a href="/logout" class="logout-btn">Logout</a>
     </div>
   </div>
 
-  <h2>Select a Team</h2>
-  <div class="players">
+  <div class="page-header">
+    <h2>Select a Team</h2>
+    <p>Click on a team to view players and place bids</p>
+  </div>
+
+  <div class="teams-grid">
     {% for t in teams %}
-    <div class="card team-card">
+    <a href="/team/{{ t.team }}" class="team-card">
+      <div class="team-icon">🏟️</div>
       <h2>{{ t.team }}</h2>
-      <a href="/team/{{ t.team }}">
-        <button>View Players</button>
-      </a>
-    </div>
+      <span class="view-label">View Players →</span>
+    </a>
     {% endfor %}
   </div>
+
 </body>
 </html>
