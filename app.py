@@ -31,6 +31,26 @@ def login_required(f):
     return decorated
 
 
+# --- ONE-TIME SETUP ROUTE ---
+# Visit /setup-users once to seed the database, then delete this route!
+@app.route("/setup-users")
+def setup_users():
+    users = [
+        {"username": "admin",   "password": "admin123", "role": "admin"},
+        {"username": "client1", "password": "pass123",  "role": "client"},
+        {"username": "client2", "password": "pass123",  "role": "client"},
+    ]
+    with engine.connect() as conn:
+        conn.execute(text("DELETE FROM users"))
+        for u in users:
+            conn.execute(
+                text("INSERT INTO users (username, password, role) VALUES (:u, :p, :r)"),
+                {"u": u["username"], "p": generate_password_hash(u["password"]), "r": u["role"]}
+            )
+        conn.commit()
+    return "✅ Users seeded successfully! Now remove this route from app.py."
+
+
 # --- LOGIN ---
 @app.route("/login", methods=["GET", "POST"])
 def login():
