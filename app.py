@@ -4,7 +4,8 @@ from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
 
@@ -57,6 +58,7 @@ def bid():
 if __name__ == "__main__":
 
     app.run(debug=True)
+
 
 
 
