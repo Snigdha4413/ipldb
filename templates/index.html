@@ -1,51 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>IPL Auction</title>
+    <title>IPL Auction App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
 <h1>IPL Player Auction</h1>
 
+<!-- Country Filter -->
 <form method="GET">
-<select name="country">
-<option value="">All Players</option>
-<option value="India">India</option>
-<option value="Australia">Australia</option>
-<option value="England">England</option>
-<option value="New Zealand">New Zealand</option>
-</select>
+    <select name="country">
+        <option value="">All Countries</option>
+        <option value="India">India</option>
+        <option value="Australia">Australia</option>
+        <option value="England">England</option>
+        <option value="South Africa">South Africa</option>
+    </select>
 
-<button type="submit">Filter</button>
+    <button type="submit">Filter Players</button>
 </form>
 
-<hr>
+{% if message %}
+<p class="message">{{ message }}</p>
+{% endif %}
 
-{% for player in players %}
+<!-- Player Cards -->
+<div class="player-container">
 
-<h3>{{player.name}} ({{player.country}})</h3>
+{% for p in players %}
 
-Runs: {{player.runs}} <br>
-Strike Rate: {{player.strike_rate}} <br>
-Current Price: {{player.current_price}} <br>
+<div class="player-card">
 
+<h3>{{p[1]}}</h3>
+
+<div class="player-stats">
+Country: {{p[2]}}
+</div>
+
+<div class="player-stats">
+Runs: {{p[4]}}
+</div>
+
+<div class="player-stats">
+Strike Rate: {{p[5]}}
+</div>
+
+<div class="player-stats price">
+Current Bid: ₹{{p[7]}}
+</div>
+
+<!-- Bid Form -->
 <form action="/bid" method="POST">
 
-<input type="hidden" name="player_id" value="{{player.id}}">
+<input type="hidden" name="player_id" value="{{p[0]}}">
 
-Enter Bid:
-<input type="number" name="bid">
+<input 
+type="number" 
+name="bid" 
+placeholder="Enter bid"
+min="{{p[7] + 1}}"
+required
+>
 
 <button type="submit">Place Bid</button>
 
 </form>
 
-<hr>
+</div>
 
 {% endfor %}
 
-<p>{{message}}</p>
+</div>
 
 </body>
 </html>
