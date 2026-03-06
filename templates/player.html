@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Bid Player</title>
+<title>{{player.name}}</title>
 <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -11,8 +11,9 @@
 <h1>{{player.name}}</h1>
 
 <p>Country: {{player.country}}</p>
-<p>Team: {{player.team}}</p>
-<p>Current Bid: ₹{{player.current_bid}}</p>
+<p>Role: {{player.role}}</p>
+
+<h2>Current Bid: ₹{{highest}}</h2>
 
 <form action="/bid" method="POST">
 
@@ -20,14 +21,15 @@
 
 <input type="text" name="bidder" placeholder="Your Name" required>
 
-<input type="number" name="bid_amount" placeholder="Enter Bid" required>
+<input type="number" name="bid_amount" placeholder="Your Bid" required>
 
 <button type="submit">Place Bid</button>
 
 </form>
 
+<br>
+
 <a href="/">Back</a>
 
 </body>
-
 </html>
