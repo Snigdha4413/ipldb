@@ -1,70 +1,59 @@
-from flask import Flask, render_template, request
-import os
+from flask import Flask, render_template, request, redirect
 from sqlalchemy import create_engine, text
+import os
 
 app = Flask(__name__)
 
-# Step 1: Get database URL from Render
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Step 2: Fix postgres URL for SQLAlchemy
-if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-# Step 3: Create database engine
-engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
+engine = create_engine(DATABASE_URL)
 
 @app.route("/")
 def index():
-    return "Server is working!"
-
-@app.route("/")
-def index():
-
-    conn = engine.connect()
-
-    result = conn.execute("SELECT * FROM players")
-
-    players = result.fetchall()
-
+    with engine.connect() as conn:
+        players = conn.execute(text("SELECT * FROM players")).fetchall()
     return render_template("index.html", players=players)
 
+@app.route("/player/<int:id>")
+def player(id):
+    with engine.connect() as conn:
+        player = conn.execute(text("SELECT * FROM players WHERE id=:id"), {"id":id}).fetchone()
+    return render_template("player.html", player=player)
 
-@app.route('/bid', methods=['POST'])
+@app.route("/bid", methods=["POST"])
 def bid():
 
-    player_id = request.form['player_id']
-    bid_amount = int(request.form['bid'])
+    player_id = request.form["player_id"]
+    bidder = request.form["bidder"]
+    bid_amount = int(request.form["bid_amount"])
 
-    conn = engine.connect()
+    with engine.connect() as conn:
 
-    result = conn.execute(
-        f"SELECT current_price FROM players WHERE id={player_id}"
-    ).fetchone()
+        current = conn.execute(
+            text("SELECT current_bid FROM players WHERE id=:id"),
+            {"id":player_id}
+        ).fetchone()
 
-    current_price = result[0]
+        if bid_amount > current[0]:
 
-    if bid_amount > current_price:
+            conn.execute(text("""
+            UPDATE players
+            SET current_bid=:bid
+            WHERE id=:id
+            """), {"bid":bid_amount, "id":player_id})
 
-        conn.execute(
-            f"UPDATE players SET current_price={bid_amount} WHERE id={player_id}"
-        )
+            conn.execute(text("""
+            INSERT INTO bids (player_id,bidder_name,bid_amount)
+            VALUES (:pid,:bidder,:amount)
+            """), {"pid":player_id,"bidder":bidder,"amount":bid_amount})
 
-        message = "Bid accepted!"
+            conn.commit()
 
-    else:
-        message = "Bid must be higher than current price"
-
-    players = conn.execute("SELECT * FROM players").fetchall()
-
-    return render_template("index.html", players=players, message=message)
-
+    return redirect("/")
+    
 
 if __name__ == "__main__":
-
     app.run(debug=True)
-
-
-
-
-
