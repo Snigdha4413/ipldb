@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ team_name }} Players</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="topbar">
+    <h1>🏏 {{ team_name }}</h1>
+    <div class="user-info">
+      {{ user }} ({{ "Admin" if is_admin else "Client" }})
+      &nbsp;|&nbsp;
+      <a href="/">← Teams</a>
+      &nbsp;|&nbsp;
+      <a href="/logout">Logout</a>
+    </div>
+  </div>
+
+  <div class="players">
+    {% for p in players %}
+    <div class="card">
+      <h2>{{ p.name }}</h2>
+      <p>🌍 {{ p.country }}</p>
+      <p>🎯 {{ p.role }}</p>
+      <p class="bid-amount">₹{{ p.highest_bid }}</p>
+      <p class="bidder">{{ p.top_bidder }}</p>
+      <a href="/player/{{ p.id }}">
+        <button>{{ "View Bids" if is_admin else "Bid Now" }}</button>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</body>
+</html>
