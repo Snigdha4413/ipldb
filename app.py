@@ -1,24 +1,25 @@
 from flask import Flask, render_template, request
-from sqlalchemy import create_engine
 import os
+from sqlalchemy import create_engine
 
 app = Flask(__name__)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-engine = create_engine(DATABASE_URL, connect_args={"sslmode":"require"})
 
-@app.route('/')
-def home():
-    country = request.args.get('country')
+engine = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
+
+@app.route("/")
+def index():
+    return "Server is working!"
+
+@app.route("/")
+def index():
 
     conn = engine.connect()
 
-    if country:
-        query = f"SELECT * FROM players WHERE country='{country}'"
-    else:
-        query = "SELECT * FROM players"
+    result = conn.execute("SELECT * FROM players")
 
-    players = conn.execute(query).fetchall()
+    players = result.fetchall()
 
     return render_template("index.html", players=players)
 
@@ -56,5 +57,6 @@ def bid():
 if __name__ == "__main__":
 
     app.run(debug=True)
+
 
 
