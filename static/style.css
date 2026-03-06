@@ -1,97 +1,28 @@
-/* Page Styling */
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f6f9;
-    margin: 0;
-    padding: 0;
+body{
+font-family: Arial;
+background:#f4f4f4;
+text-align:center;
 }
 
-/* Header */
-h1 {
-    text-align: center;
-    background: #1e3a8a;
-    color: white;
-    padding: 20px;
-    margin: 0;
+.players{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
 }
 
-/* Filter Section */
-form {
-    text-align: center;
-    margin: 20px;
+.card{
+background:white;
+padding:20px;
+margin:15px;
+border-radius:10px;
+width:200px;
+box-shadow:0px 0px 10px rgba(0,0,0,0.2);
 }
 
-/* Dropdown */
-select {
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 5px;
-}
-
-/* Buttons */
-button {
-    padding: 8px 15px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #1d4ed8;
-}
-
-/* Player Card Container */
-.player-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-/* Player Cards */
-.player-card {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-}
-
-.player-card:hover {
-    transform: scale(1.03);
-}
-
-/* Player Name */
-.player-card h3 {
-    margin-top: 0;
-    color: #1e3a8a;
-}
-
-/* Stats */
-.player-stats {
-    margin: 10px 0;
-    font-size: 15px;
-}
-
-/* Price */
-.price {
-    font-weight: bold;
-    color: #059669;
-}
-
-/* Bid Input */
-input[type="number"] {
-    padding: 6px;
-    width: 120px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-/* Message */
-.message {
-    text-align: center;
-    font-weight: bold;
-    color: red;
+button{
+background:#ff6600;
+color:white;
+border:none;
+padding:10px;
+cursor:pointer;
 }
