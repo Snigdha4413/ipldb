@@ -2,8 +2,9 @@ from flask import Flask, render_template, request
 from sqlalchemy import create_engine
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+app = Flask(__name__)
 
+DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 
 @app.route('/')
@@ -55,3 +56,4 @@ def bid():
 if __name__ == "__main__":
 
     app.run(debug=True)
+
