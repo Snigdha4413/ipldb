@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>IPL Auction</title>
+</head>
+
+<body>
+
+<h1>IPL Player Auction</h1>
+
+<form method="GET">
+<select name="country">
+<option value="">All Players</option>
+<option value="India">India</option>
+<option value="Australia">Australia</option>
+<option value="England">England</option>
+<option value="New Zealand">New Zealand</option>
+</select>
+
+<button type="submit">Filter</button>
+</form>
+
+<hr>
+
+{% for player in players %}
+
+<h3>{{player.name}} ({{player.country}})</h3>
+
+Runs: {{player.runs}} <br>
+Strike Rate: {{player.strike_rate}} <br>
+Current Price: {{player.current_price}} <br>
+
+<form action="/bid" method="POST">
+
+<input type="hidden" name="player_id" value="{{player.id}}">
+
+Enter Bid:
+<input type="number" name="bid">
+
+<button type="submit">Place Bid</button>
+
+</form>
+
+<hr>
+
+{% endfor %}
+
+<p>{{message}}</p>
+
+</body>
+</html>
