@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, connect_args={"sslmode":"require"})
 
 @app.route('/')
 def home():
@@ -56,4 +56,5 @@ def bid():
 if __name__ == "__main__":
 
     app.run(debug=True)
+
 
