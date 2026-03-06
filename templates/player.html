@@ -1,35 +1,57 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-<title>{{player.name}}</title>
-<link rel="stylesheet" href="/static/style.css">
+  <title>{{ player.name }}</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
+  <div class="topbar">
+    <h1>{{ player.name }}</h1>
+    <div class="user-info">
+      {{ user }} ({{ "Admin" if is_admin else "Client" }})
+      &nbsp;|&nbsp;
+      <a href="/team/{{ player.team }}">← Back to {{ player.team }}</a>
+      &nbsp;|&nbsp;
+      <a href="/logout">Logout</a>
+    </div>
+  </div>
 
-<h1>{{player.name}}</h1>
+  <div class="player-detail">
+    <p>🌍 Country: <strong>{{ player.country }}</strong></p>
+    <p>🎯 Role: <strong>{{ player.role }}</strong></p>
+    <p>🏏 Team: <strong>{{ player.team }}</strong></p>
+    <h2>Current Bid: ₹{{ highest }}</h2>
+    {% if top_bidder %}
+      <p>🏆 Leading: <strong>{{ top_bidder }}</strong></p>
+    {% endif %}
 
-<p>Country: {{player.country}}</p>
-<p>Role: {{player.role}}</p>
+    {% if not is_admin %}
+    <!-- CLIENTS: Show bid form -->
+    <form action="/bid" method="POST">
+      <input type="hidden" name="player_id" value="{{ player.id }}">
+      <input type="number" name="bid_amount"
+             placeholder="Enter bid (min ₹{{ highest + 1 }})"
+             min="{{ highest + 1 }}" required>
+      <button type="submit">Place Bid</button>
+    </form>
+    {% else %}
+    <!-- ADMINS: View only -->
+    <div class="admin-notice">👁️ Admin View — Bidding Disabled</div>
+    {% endif %}
 
-<h2>Current Bid: ₹{{highest}}</h2>
-
-<form action="/bid" method="POST">
-
-<input type="hidden" name="player_id" value="{{player.id}}">
-
-<input type="text" name="bidder" placeholder="Your Name" required>
-
-<input type="number" name="bid_amount" placeholder="Your Bid" required>
-
-<button type="submit">Place Bid</button>
-
-</form>
-
-<br>
-
-<a href="/">Back</a>
-
+    {% if bid_history %}
+    <h3>Bid History</h3>
+    <table class="bid-table">
+      <tr><th>Bidder</th><th>Amount</th><th>Time</th></tr>
+      {% for b in bid_history %}
+      <tr>
+        <td>{{ b.bidder }}</td>
+        <td>₹{{ b.bid_amount }}</td>
+        <td>{{ b.bid_time.strftime('%H:%M:%S') }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </div>
 </body>
 </html>
