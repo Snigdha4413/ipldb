@@ -1,37 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>IPL Auction</title>
-<link rel="stylesheet" href="/static/style.css">
+  <title>IPL Auction</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
+  <div class="topbar">
+    <h1>🏏 IPL Auction</h1>
+    <div class="user-info">
+      Logged in as <strong>{{ user }}</strong>
+      ({{ "Admin" if is_admin else "Client" }})
+      &nbsp;|&nbsp;
+      <a href="/logout">Logout</a>
+    </div>
+  </div>
 
-<h1>IPL Player Auction</h1>
-
-<div class="players">
-
-{% for p in players %}
-
-<div class="card">
-
-<h2>{{p.name}}</h2>
-
-<p>{{p.country}}</p>
-
-<p>{{p.role}}</p>
-
-<p>Current Bid: ₹{{p.highest_bid}}</p>
-
-<a href="/player/{{p.id}}">
-<button>Open Auction</button>
-</a>
-
-</div>
-
-{% endfor %}
-
-</div>
-
+  <h2>Select a Team</h2>
+  <div class="players">
+    {% for t in teams %}
+    <div class="card team-card">
+      <h2>{{ t.team }}</h2>
+      <a href="/team/{{ t.team }}">
+        <button>View Players</button>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
 </body>
 </html>
